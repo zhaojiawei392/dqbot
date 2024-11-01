@@ -26,6 +26,7 @@
 #include <memory>
 #include <vector>
 #include <array>
+#include "qpOASES.hpp"
 #include "dqpose.hpp"
 
 namespace dqbot
