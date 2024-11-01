@@ -23,7 +23,7 @@
  */
 
 #include <array>
-#include "SerialManipulator.hpp"
+#include "serialmanipulator.hpp"
 
 int main() {
     std::array<std::array<float, 6>, 5> dh {
@@ -49,20 +49,20 @@ int main() {
 
     std::array<float, 6> joint_positions {0,0,0,0,0,0};
 
-    dqkinematics::SerialManipulator<float, 6> robot(dh, limits, joint_positions);
+    dqbot::SerialManipulator<float, 6> robot(dh, limits, joint_positions);
 
-    dqpose::Posef x_init = robot.end_pose();
-    dqpose::Tranf t_init = x_init.translation();
-    dqpose::Rotf r_init = x_init.rotation();
+    dqbot::Posef x_init = robot.end_pose();
+    dqbot::Tranf t_init = x_init.translation();
+    dqbot::Rotf r_init = x_init.rotation();
     float radius = 0.01;
     float rad_speed = 0.001;
     size_t i = 0;
 
     while (true)
     {   
-        dqpose::Tranf offset = t_init + dqpose::Tranf(-0.02, radius * cos(rad_speed*i), radius * sin(rad_speed*i) + 0.05);
+        dqbot::Tranf offset = t_init + dqbot::Tranf(-0.02, radius * cos(rad_speed*i), radius * sin(rad_speed*i) + 0.05);
         ++i;
-        dqpose::Posef xd = dqpose::Posef::build_from(r_init, offset);
+        dqbot::Posef xd = dqbot::Posef::build_from(r_init, offset);
 
         robot.update(xd);
 
