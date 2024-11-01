@@ -26,12 +26,12 @@
 
 cmake_minimum_required(VERSION 3.25)
 
-# Not build lib examples
-set(QPOASES_BUILD_EXAMPLES OFF CACHE INTERNAL "Not build examples for qpoases.")
 
 # Macro options
-Option(jwbot_BUILD_EXAMPLES ON "Build examples for dqbot")
-message(STATUS "jwbot_BUILD_EXAMPLES is set to ${jwbot_BUILD_EXAMPLES}")
+option(dqbot_BUILD_EXAMPLES "Build examples." ON)
+message(STATUS "dqbot_BUILD_EXAMPLES is set to ${dqbot_BUILD_EXAMPLES}")
+# Not build lib examples
+set(QPOASES_BUILD_EXAMPLES OFF CACHE INTERNAL "Not build examples for qpoases.")
 
 # Set the project name and version
 project(dqbot VERSION 1.0 LANGUAGES CXX)
@@ -63,7 +63,7 @@ link_libraries(
     qpOASES
 )
 
-if(jwbot_BUILD_EXAMPLES)
+if(dqbot_BUILD_EXAMPLES)
     set(EXAMPLE_NAMES
         dqexample1
     )
