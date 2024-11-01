@@ -67,11 +67,25 @@ inline std::ostream& operator<<(std::ostream& os, const Quat<Scalar>& quat) {
     os << quat.to_string();  
     return os;
 }
+// T operator<<
+template<typename Scalar>
+inline std::ostream& operator<<(std::ostream& os, const DualQuat<Scalar>& dq) {
+    os << dq.to_string();  
+    return os;
+}
 // T T operator*
 template<typename Scalar1, typename Scalar2> 
 inline std::enable_if_t<std::is_arithmetic_v<Scalar1>, Quat<Scalar2>>
 operator*(const Scalar1 scalar, const Quat<Scalar2>& quat) noexcept {return quat * scalar;}
-
+// T T operator*
+template<typename Scalar1, typename Scalar2>
+inline std::enable_if_t<std::is_arithmetic_v<Scalar1>, DualQuat<Scalar2>>
+operator*(const Scalar1 scalar, const DualQuat<Scalar2>& dq) noexcept {return dq * scalar;}
+// T T operator*
+template<typename Scalar1, typename Scalar2>
+inline DualQuat<Scalar1> operator*(const Quat<Scalar1>& quat, const DualQuat<Scalar2>& dq) noexcept {
+    return DualQuat<Scalar1>( quat * dq.real(), quat * dq.dual() );
+}
 
 template<typename qScalar, typename>
 class Quat {
@@ -769,26 +783,36 @@ using Quatu = Quat<std::uint8_t>;
 using Rotu = Rotation<std::uint8_t>;
 using Tranu = Translation<std::uint8_t>;
 using Unitu = UnitAxis<std::uint8_t>;
+using DQu = DualQuat<std::uint8_t>;
+using Poseu = Pose<std::uint8_t>;
 
 using Quati = Quat<int>;
 using Roti = Rotation<int>;
 using Trani = Translation<int>;
 using Uniti = UnitAxis<int>;
+using DQi = DualQuat<int>;
+using Posei = Pose<int>;
 
 using Quatf = Quat<float>;
 using Rotf = Rotation<float>;
 using Tranf = Translation<float>;
 using Unitf = UnitAxis<float>;
+using DQf = DualQuat<float>;
+using Posef = Pose<float>;
 
 using Quatd = Quat<double>;
 using Rotd = Rotation<double>;
 using Trand = Translation<double>;
-using UnitPureQuatd = UnitAxis<double>;
+using Unitd = UnitAxis<double>;
+using DQd = DualQuat<double>;
+using Posed = Pose<double>;
 
 using Quatld = Quat<long double>;
 using Rotld = Rotation<long double>;
 using Tranld = Translation<long double>;
 using Unitld = UnitAxis<long double>;
+using DQld = DualQuat<long double>;
+using Poseld = Pose<long double>;
 
 constexpr UnitAxis<std::uint8_t> i_(1,0,0);
 constexpr UnitAxis<std::uint8_t> j_(0,1,0);
