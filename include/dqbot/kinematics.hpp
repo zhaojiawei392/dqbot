@@ -16,7 +16,7 @@
  */
 
 /**
- *     \file include/dqbot/serialmanipulator.hpp
+ *     \file include/dqbot/kinematics.hpp
  *	   \author Jiawei ZHAO
  *	   \version 1.0
  *	   \date 2023-2024

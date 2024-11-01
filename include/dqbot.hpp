@@ -24,5 +24,5 @@
 
 #pragma once
 #include "dqbot/dqpose.hpp"
-#include "dqbot/serialmanipulator.hpp"
+#include "dqbot/kinematics.hpp"
 
