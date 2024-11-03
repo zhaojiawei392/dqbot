@@ -16,14 +16,14 @@
  */
 
 /**
- *     \file examples/example1.hpp
+ *     \file examples/dqexample1.hpp
  *	   \author Jiawei ZHAO
  *	   \version 1.0
  *	   \date 2023-2024
  */
 
 #include <array>
-#include "serialmanipulator.hpp"
+#include "dqbot.hpp"
 
 int main() {
     std::array<std::array<float, 6>, 5> dh {
