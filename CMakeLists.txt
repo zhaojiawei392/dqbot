@@ -28,18 +28,15 @@
  ##    licensed under the MIT License 
 
 cmake_minimum_required(VERSION 3.25)
-project(dqbot VERSION 1.0.0)
-
-# Macro options
-option(dqbot_BUILD_EXAMPLES "Build examples." ON)
-message(STATUS "dqbot_BUILD_EXAMPLES is set to ${dqbot_BUILD_EXAMPLES}")
-
-# Set the project name and version
-project(dqbot VERSION 1.0 LANGUAGES CXX)
+project(dqbot VERSION 1.0.0 LANGUAGES CXX)
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED True)
 set(CMAKE_CXX_EXTENSIONS OFF)
 set(CMAKE_DEBUG_POSTFIX d)
+
+# Macro options
+option(dqbot_BUILD_EXAMPLES "Build examples." ON)
+message(STATUS "dqbot_BUILD_EXAMPLES is set to ${dqbot_BUILD_EXAMPLES}")
 
 # add compiler warning flags just when building this project via
 # the BUILD_INTERFACE genex
@@ -49,11 +46,6 @@ add_compile_options(
   "$<${gcc_like_cxx}:$<BUILD_INTERFACE:-Wall;-Wextra;-Wshadow;-Wformat=2;-Wunused>>"
   "$<${msvc_cxx}:$<BUILD_INTERFACE:-W3>>"
 )
-
-# Make static, shared, executables all built in build dir
-set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY "${PROJECT_BINARY_DIR}")
-set(CMAKE_LIBRARY_OUTPUT_DIRECTORY "${PROJECT_BINARY_DIR}")
-set(CMAKE_RUNTIME_OUTPUT_DIRECTORY "${PROJECT_BINARY_DIR}")
 
 # Not build lib examples
 set(QPOASES_BUILD_EXAMPLES OFF CACHE INTERNAL "Not build examples for qpoases.")
@@ -95,7 +87,6 @@ install(EXPORT dqbotTargets
         DESTINATION lib/cmake/dqbot)
 
 configure_file(dqbotConfig.cmake.in dqbotConfig.cmake @ONLY)
-
 install(FILES
         "${CMAKE_CURRENT_BINARY_DIR}/dqbotConfig.cmake"
         "${CMAKE_CURRENT_BINARY_DIR}/dqbotConfigVersion.cmake"
