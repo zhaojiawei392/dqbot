@@ -37,7 +37,7 @@ namespace dqbot
 {
 
 
-constexpr int PRINT_PRECISION = 12;
+int PRINT_PRECISION = 12;
 
 // Forward declarations
 template<typename qScalar, typename = std::enable_if_t<std::is_arithmetic_v<qScalar>>>
@@ -89,35 +89,35 @@ class Quat {
 public:
 protected:
     std::array<qScalar, 4> _data;
-    constexpr inline qScalar& _w() noexcept {return _data[0];};
-    constexpr inline qScalar& _x() noexcept {return _data[1];};
-    constexpr inline qScalar& _y() noexcept {return _data[2];};
-    constexpr inline qScalar& _z() noexcept {return _data[3];};
+    inline qScalar& _w() noexcept {return _data[0];};
+    inline qScalar& _x() noexcept {return _data[1];};
+    inline qScalar& _y() noexcept {return _data[2];};
+    inline qScalar& _z() noexcept {return _data[3];};
 public:
     // Default Constructor
-    constexpr explicit Quat() noexcept
+    explicit Quat() noexcept
     : _data{ 0, 0, 0, 0 } {
 
     }
     // Array Constructor
-    constexpr explicit Quat(const std::array<qScalar, 4>& arr4) noexcept
+    explicit Quat(const std::array<qScalar, 4>& arr4) noexcept
     : _data( arr4 ) {
 
     }
     // Scalar Constructor
-    constexpr explicit Quat(const qScalar w, const qScalar x=0, const qScalar y=0, const qScalar z=0) noexcept
+    explicit Quat(const qScalar w, const qScalar x=0, const qScalar y=0, const qScalar z=0) noexcept
     : _data{ w, x, y, z } {
 
     }
     // T Copy Constructors 
     template<typename Scalar>
-    constexpr Quat(const Quat<Scalar>& other) noexcept
+    Quat(const Quat<Scalar>& other) noexcept
     : _data{ static_cast<qScalar>(other.w()), static_cast<qScalar>(other.x()), static_cast<qScalar>(other.y()), static_cast<qScalar>(other.z()) } {
 
     }
     // T Copy Assignment
     template<typename Scalar>
-    constexpr inline Quat& operator=(const Quat<Scalar>& other) noexcept {
+    inline Quat& operator=(const Quat<Scalar>& other) noexcept {
         _w() = static_cast<qScalar>(other.w());
         _x() = static_cast<qScalar>(other.x());
         _y() = static_cast<qScalar>(other.y());
@@ -125,7 +125,7 @@ public:
         return *this;
     }
     // normalize
-    constexpr inline Quat& normalize() {
+    inline Quat& normalize() {
         const qScalar this_norm = this->norm();
         if (this_norm == 0) {
             throw std::runtime_error("Error: Quat& Quat::normalize() Cannot normalize a 0-norm Quaternion.");
@@ -138,13 +138,13 @@ public:
         return *this;
     }
     // purify
-    constexpr inline Quat& purify() noexcept {
+    inline Quat& purify() noexcept {
         _w() = 0;
         return *this;
     }
     // operator+
     template<typename Scalar>
-    constexpr inline Quat operator+(const Quat<Scalar>& other) const noexcept {
+    inline Quat operator+(const Quat<Scalar>& other) const noexcept {
         const qScalar result_w = w() + static_cast<qScalar>(other.w());
         const qScalar result_x = x() + static_cast<qScalar>(other.x()); 
         const qScalar result_y = y() + static_cast<qScalar>(other.y()); 
@@ -153,7 +153,7 @@ public:
     }
     // operator-
     template<typename Scalar>
-    constexpr inline Quat operator-(const Quat<Scalar>& other) const noexcept {
+    inline Quat operator-(const Quat<Scalar>& other) const noexcept {
         const qScalar result_w = w() - static_cast<qScalar>(other.w());
         const qScalar result_x = x() - static_cast<qScalar>(other.x());
         const qScalar result_y = y() - static_cast<qScalar>(other.y());
@@ -162,7 +162,7 @@ public:
     }
     // operator*
     template<typename Scalar>
-    constexpr inline Quat operator*(const Quat<Scalar>& other) const noexcept {
+    inline Quat operator*(const Quat<Scalar>& other) const noexcept {
         const qScalar other_w = static_cast<qScalar>(other.w());
         const qScalar other_x = static_cast<qScalar>(other.x());
         const qScalar other_y = static_cast<qScalar>(other.y());
@@ -174,7 +174,7 @@ public:
         return Quat(result_w, result_x, result_y, result_z);
     }
     // operator*
-    constexpr inline Quat operator*(const qScalar scalar) const noexcept {
+    inline Quat operator*(const qScalar scalar) const noexcept {
         const qScalar result_w = w() * scalar;  
         const qScalar result_x = x() * scalar; 
         const qScalar result_y = y() * scalar; 
@@ -182,43 +182,43 @@ public:
         return Quat(result_w, result_x, result_y, result_z);
     }
     // -operator
-    constexpr inline Quat operator-() const noexcept { return Quat(-w(), -x(), -y(), -z()); }
+    inline Quat operator-() const noexcept { return Quat(-w(), -x(), -y(), -z()); }
     // operator==
     template<typename Scalar>
-    constexpr inline bool operator==(const Quat<Scalar>& other) const noexcept { return _data == other._data; }
+    inline bool operator==(const Quat<Scalar>& other) const noexcept { return _data == other._data; }
     // operator!=
     template<typename Scalar>
-    constexpr inline bool operator!=(const Quat<Scalar>& other) const noexcept { return _data != other._data; }
+    inline bool operator!=(const Quat<Scalar>& other) const noexcept { return _data != other._data; }
     // dot
     template<typename Scalar>
-    constexpr inline qScalar dot(const Quat<Scalar>& other) const noexcept {
+    inline qScalar dot(const Quat<Scalar>& other) const noexcept {
         return    w() * static_cast<qScalar>(other.w()) 
                 + x() * static_cast<qScalar>(other.x()) 
                 + y() * static_cast<qScalar>(other.y()) 
                 + z() * static_cast<qScalar>(other.z());
     }
     // norm
-    constexpr inline qScalar norm() const noexcept {
+    inline qScalar norm() const noexcept {
         return std::sqrt( square( w() ) + square( x() ) + square( y() ) + square( z() ));
     }
     // norm3
-    constexpr inline qScalar norm3() const noexcept {
+    inline qScalar norm3() const noexcept {
         return std::sqrt( square( x() ) + square( y() ) + square( z() ));
     }
     // copied
-    constexpr inline Quat copied() const noexcept {
+    inline Quat copied() const noexcept {
         return *this;
     }
     // normalized
-    constexpr inline Quat normalized() const {
+    inline Quat normalized() const {
         return copied().normalize(); 
     }
     // purified
-    constexpr inline Quat purified() const noexcept {
+    inline Quat purified() const noexcept {
         return copied().purify(); 
     }
     // conj
-    constexpr inline Quat conj() const noexcept {
+    inline Quat conj() const noexcept {
         const qScalar result_w = w();  
         const qScalar result_x = - x(); 
         const qScalar result_y = - y(); 
@@ -226,7 +226,7 @@ public:
         return Quat(result_w, result_x, result_y, result_z);  
     }
     // inv
-    constexpr inline Quat inv() const noexcept {
+    inline Quat inv() const noexcept {
         const qScalar norm2 = square(norm());
         const qScalar result_w = w() / norm2;  
         const qScalar result_x = - x() / norm2; 
@@ -235,7 +235,7 @@ public:
         return Quat(result_w, result_x, result_y, result_z);  
     }
     // log
-    constexpr inline Quat log() const noexcept {
+    inline Quat log() const noexcept {
         const qScalar vec3_norm = norm3();
         if (vec3_norm == 0) {
             return Quat(std::log(w()));
@@ -249,7 +249,7 @@ public:
         return Quat(result_w, result_x, result_y, result_z);  
     }
     // exp
-    constexpr inline Quat exp() const noexcept {        
+    inline Quat exp() const noexcept {        
         const qScalar vec3_norm = norm3();
         const qScalar exp_w = std::exp(w());        
         if (vec3_norm == 0) {
@@ -264,40 +264,40 @@ public:
         return Quat(result_w, result_x, result_y, result_z); 
     }
     // pow
-    constexpr inline Quat pow(const qScalar index) const noexcept{
+    inline Quat pow(const qScalar index) const noexcept{
         return (this->log() * index).exp();
     }
     // hamiplus
-    constexpr inline std::array<std::array<qScalar, 4>, 4> hamiplus() const noexcept {
+    inline std::array<std::array<qScalar, 4>, 4> hamiplus() const noexcept {
         return std::array<std::array<qScalar, 4>, 4> { { w(), -x(), -y(), -z() },
                                                     { x(),  w(), -z(),  y() },
                                                     { y(),  z(),  w(), -x() },
                                                     { z(), -y(),  x(),  w() } };
     }
     // haminus
-    constexpr inline std::array<std::array<qScalar, 4>, 4> haminus() const noexcept {
+    inline std::array<std::array<qScalar, 4>, 4> haminus() const noexcept {
         return std::array<std::array<qScalar, 4>, 4> { { w(), -x(), -y(), -z() },
                                                     { x(),  w(),  z(), -y() },
                                                     { y(), -z(),  w(),  x() },
                                                     { z(),  y(), -x(),  w() } };            
     }
     // Query const
-    constexpr inline qScalar w() const noexcept {return _data[0];}
-    constexpr inline qScalar x() const noexcept {return _data[1];}
-    constexpr inline qScalar y() const noexcept {return _data[2];}
-    constexpr inline qScalar z() const noexcept {return _data[3];}
+    inline qScalar w() const noexcept {return _data[0];}
+    inline qScalar x() const noexcept {return _data[1];}
+    inline qScalar y() const noexcept {return _data[2];}
+    inline qScalar z() const noexcept {return _data[3];}
     // to_string
-    constexpr inline std::string to_string() const {    
+    inline std::string to_string() const {    
         std::ostringstream oss;
         oss << std::fixed << std::setprecision(PRINT_PRECISION) << w() << " + " << x() << " î + " << y() << " ĵ + " << z() << " k̂";
         return oss.str();
     };
     // data
-    constexpr inline const qScalar* data3() const noexcept { return _data.data()+1; }
-    constexpr inline const qScalar* data4() const noexcept { return _data.data(); }
-    constexpr inline std::array<qScalar, 3> array3() const noexcept { return std::array<qScalar, 3>{x(), y(), z()}; }
-    constexpr inline std::array<qScalar, 4> array4() const noexcept { return _data; }
-    constexpr inline std::array<qScalar, 4> vrep_array4() const noexcept { return std::array<qScalar, 4>{x(), y(), z(), w()}; }
+    inline const qScalar* data3() const noexcept { return _data.data()+1; }
+    inline const qScalar* data4() const noexcept { return _data.data(); }
+    inline std::array<qScalar, 3> array3() const noexcept { return std::array<qScalar, 3>{x(), y(), z()}; }
+    inline std::array<qScalar, 4> array4() const noexcept { return _data; }
+    inline std::array<qScalar, 4> vrep_array4() const noexcept { return std::array<qScalar, 4>{x(), y(), z(), w()}; }
     // Defaults
     virtual ~Quat()=default;    
             Quat(const Quat&)=default;
@@ -311,29 +311,29 @@ class Translation: public Quat<qScalar>
 { 
 public:
     // Default Constructor
-    constexpr explicit Translation() noexcept
+    explicit Translation() noexcept
     : Quat<qScalar>( ) {
 
     }
     // Array Constructor
-    constexpr explicit Translation(const std::array<qScalar, 3> arr3) noexcept
+    explicit Translation(const std::array<qScalar, 3> arr3) noexcept
     : Quat<qScalar>( 0, arr3[0], arr3[1], arr3[2] ) {
 
     }
     // Scalar Constructor
-    constexpr explicit Translation(const qScalar x, const qScalar y=0, const qScalar z=0) noexcept
+    explicit Translation(const qScalar x, const qScalar y=0, const qScalar z=0) noexcept
     : Quat<qScalar>( 0, x, y, z ) {
 
     }
     // Quat Constructor
     template<typename Scalar>
-    constexpr Translation(const Quat<Scalar>& other) noexcept
+    Translation(const Quat<Scalar>& other) noexcept
     : Quat<qScalar>( 0, other.x(), other.y(), other.z() ) {
 
     }
     // Quat Assignment
     template<typename Scalar>
-    constexpr inline Translation& operator=(const Quat<Scalar>& other) noexcept {
+    inline Translation& operator=(const Quat<Scalar>& other) noexcept {
         this->_w() = 0;
         this->_x() = static_cast<qScalar>(other.x());
         this->_y() = static_cast<qScalar>(other.y());
@@ -342,29 +342,29 @@ public:
     }
     // active_rotate 
     template<typename Scalar>
-    constexpr inline Translation& active_rotate(const Rotation<Scalar>& rotation) noexcept {
+    inline Translation& active_rotate(const Rotation<Scalar>& rotation) noexcept {
         this->operator=(rotation * *this * rotation.conj());
         return *this;
     }
     // passive_rotate 
     template<typename Scalar>
-    constexpr inline Translation& passive_rotate(const Rotation<Scalar>& rotation) noexcept {
+    inline Translation& passive_rotate(const Rotation<Scalar>& rotation) noexcept {
         this->operator=(rotation.conj() * *this * rotation);
         return *this;
     }
     // active_rotated
     template<typename Scalar>
-    constexpr inline Translation active_rotated(const Rotation<Scalar>& rotation) const noexcept {
+    inline Translation active_rotated(const Rotation<Scalar>& rotation) const noexcept {
         return Translation(rotation * *this * rotation.conj());
     }    
     // passive_rotated
     template<typename Scalar>
-    constexpr inline Translation passive_rotated(const Rotation<Scalar>& rotation) const noexcept {
+    inline Translation passive_rotated(const Rotation<Scalar>& rotation) const noexcept {
         return Translation(rotation.conj() * *this * rotation);
     }
     // perpendicular
     template<typename Scalar>
-    constexpr inline UnitAxis<qScalar> perpendicular(const Translation<Scalar>& other) const noexcept {
+    inline UnitAxis<qScalar> perpendicular(const Translation<Scalar>& other) const noexcept {
         const qScalar axis_x = this->y() * other.z() - this->z() * other.y();
         const qScalar axis_y = this->z() * other.x() - this->x() * other.z();
         const qScalar axis_z = this->x() * other.y() - this->y() * other.x();
@@ -372,7 +372,7 @@ public:
     }
     // angle
     template<typename Scalar>
-    constexpr inline qScalar angle(const Translation<Scalar>& other) const noexcept {
+    inline qScalar angle(const Translation<Scalar>& other) const noexcept {
         return std::acos(this->normalized().dot(other.normalized()));
     }
     // Defaults
@@ -388,29 +388,29 @@ class Rotation : public Quat<qScalar>
 {
 public:
     // Default Constructor 
-    constexpr explicit Rotation() noexcept
+    explicit Rotation() noexcept
     : Quat<qScalar>( 1 ) {
     
     }
     // Array Constructor
-    constexpr explicit Rotation(const std::array<qScalar, 4>& arr4) noexcept
+    explicit Rotation(const std::array<qScalar, 4>& arr4) noexcept
     : Quat<qScalar>( arr4 ) {
         this->normalize();
     }
     // Scalar Constructor 
-    constexpr explicit Rotation(const qScalar w, const qScalar x=0, const qScalar y=0, const qScalar z=0) noexcept
+    explicit Rotation(const qScalar w, const qScalar x=0, const qScalar y=0, const qScalar z=0) noexcept
     : Quat<qScalar>( w, x, y, z ) {
         this->normalize();
     }
     // Quat Constructor
     template<typename Scalar>
-    constexpr Rotation(const Quat<Scalar>& other) noexcept
+    Rotation(const Quat<Scalar>& other) noexcept
     : Quat<qScalar>(other) {
         this->normalize();
     }
     // Quat Assignment 
     template<typename Scalar>
-    constexpr inline Rotation& operator=(const Quat<Scalar>& other) noexcept {
+    inline Rotation& operator=(const Quat<Scalar>& other) noexcept {
         this->_w() = static_cast<qScalar>(other.w());
         this->_x() = static_cast<qScalar>(other.x());
         this->_y() = static_cast<qScalar>(other.y());
@@ -420,7 +420,7 @@ public:
     }    
     // Axis-Angle Constructor 
     template<typename Scalar>
-    constexpr explicit Rotation(const UnitAxis<Scalar>& rotate_axis, const qScalar rotate_angle) noexcept
+    explicit Rotation(const UnitAxis<Scalar>& rotate_axis, const qScalar rotate_angle) noexcept
     : Quat<qScalar>(1) {
         this->_w() = cos(0.5 * rotate_angle);
         const qScalar sin_ = sin(0.5 * rotate_angle);
@@ -429,7 +429,7 @@ public:
         this->_z() = rotate_axis.z() * sin_;
     }
     // rotation_axis
-    constexpr inline UnitAxis<qScalar> rotation_axis() const noexcept {
+    inline UnitAxis<qScalar> rotation_axis() const noexcept {
         const qScalar vec3_norm = this->norm3();
         if (vec3_norm == 0){
             return UnitAxis<qScalar>(0,0,1);
@@ -440,7 +440,7 @@ public:
         return UnitAxis<qScalar>(result_x, result_y, result_z);
     }
     // rotation_angle
-    constexpr inline qScalar rotation_angle() const noexcept {
+    inline qScalar rotation_angle() const noexcept {
         return 2 * acos(this->w() / this->norm());
     }
     // Defaults
@@ -456,30 +456,30 @@ class UnitAxis : public Quat<qScalar>
 {
 public:
     // Default Constructor
-    constexpr explicit UnitAxis() noexcept 
+    explicit UnitAxis() noexcept 
         : Quat<qScalar>( 0, 1, 0, 0 ) {
 
         }
     // Array Constructor
-    constexpr explicit UnitAxis(const std::array<qScalar, 3> arr3) noexcept
+    explicit UnitAxis(const std::array<qScalar, 3> arr3) noexcept
         : Quat<qScalar>( 0, arr3[0], arr3[1], arr3[2] ) {
         this->normalize();
         }
     // Scalar Constructor
-    constexpr explicit UnitAxis(const qScalar x, const qScalar y=0, const qScalar z=0) noexcept
+    explicit UnitAxis(const qScalar x, const qScalar y=0, const qScalar z=0) noexcept
         : Quat<qScalar>( 0, x, y, z ) {
         this->normalize();
         }
     // Quat Constructor
     template<typename Scalar>
-    constexpr UnitAxis(const Quat<Scalar>& other) noexcept
+    UnitAxis(const Quat<Scalar>& other) noexcept
         : Quat<qScalar>( other ) {
         this->_w() = 0;
         this->normalize();
         }
     // Quat Assignment
     template<typename Scalar>
-    constexpr inline UnitAxis& operator=(const Quat<Scalar>& other) noexcept {
+    inline UnitAxis& operator=(const Quat<Scalar>& other) noexcept {
         this->_w() = 0;
         this->_x() = static_cast<qScalar>(other.x());
         this->_y() = static_cast<qScalar>(other.y());
@@ -499,52 +499,52 @@ template<typename qScalar, typename>
 class DualQuat{
 protected:
     std::array<Quat<qScalar>, 2> _data;
-    constexpr inline Quat<qScalar>& _real() {return _data[0];}
-    constexpr inline Quat<qScalar>& _dual() {return _data[1];}
+    inline Quat<qScalar>& _real() {return _data[0];}
+    inline Quat<qScalar>& _dual() {return _data[1];}
 public:
     // Default Constructor
-    constexpr explicit DualQuat() noexcept
+    explicit DualQuat() noexcept
     : _data{ Quat<qScalar>(), Quat<qScalar>() } {
 
     }
     // Array Constructor
-    constexpr explicit DualQuat(const std::array<qScalar, 8> arr8) noexcept
+    explicit DualQuat(const std::array<qScalar, 8> arr8) noexcept
     : _data{ Quat<qScalar>(arr8[0], arr8[1], arr8[2], arr8[3]), Quat<qScalar>(arr8[4], arr8[5], arr8[6], arr8[7]) } {
 
     }
     // Scalar Constructor
-    constexpr explicit DualQuat(const qScalar w1, const qScalar x1=0, const qScalar y1=0, const qScalar z1=0, 
+    explicit DualQuat(const qScalar w1, const qScalar x1=0, const qScalar y1=0, const qScalar z1=0, 
                       const qScalar w2=0, const qScalar x2=0, const qScalar y2=0, const qScalar z2=0) noexcept
     : _data{ Quat<qScalar>(w1, x1, y1, z1), Quat<qScalar>(w2, x2, y2, z2) } {
 
     }
     // Real Constructor
     template<typename Scalar>
-    constexpr explicit DualQuat(const Quat<Scalar>& real) noexcept
+    explicit DualQuat(const Quat<Scalar>& real) noexcept
     : _data{ Quat<qScalar>(real), Quat<qScalar>() } {
 
     }
     // Real-Dual Constructor
     template<typename Scalar1, typename Scalar2>
-    constexpr explicit DualQuat(const Quat<Scalar1>& real, const Quat<Scalar2>& dual) noexcept
+    explicit DualQuat(const Quat<Scalar1>& real, const Quat<Scalar2>& dual) noexcept
     : _data{ Quat<qScalar>(real), Quat<qScalar>(dual) } {
 
     }
     // Copy Constructor
     template<typename Scalar>
-    constexpr DualQuat(const DualQuat<Scalar>& other) noexcept
+    DualQuat(const DualQuat<Scalar>& other) noexcept
     : _data{ Quat<qScalar>(other.real()), Quat<qScalar>(other.dual()) } {
 
     }
     // Copy Assignment
     template<typename Scalar>
-    constexpr inline DualQuat& operator=(const DualQuat<Scalar>& other) noexcept {
+    inline DualQuat& operator=(const DualQuat<Scalar>& other) noexcept {
         _real() = other.real();
         _dual() = other.dual();
         return *this;
     }
     // normalize
-    constexpr inline DualQuat& normalize() {
+    inline DualQuat& normalize() {
         const qScalar this_norm = real().norm();
         if (this_norm == 0) {
             throw std::runtime_error("Error: DualQuat& normalize() Cannot normalize a 0 Dual Quaternion.");
@@ -555,51 +555,51 @@ public:
         return *this;
     }
     // purifiy
-    constexpr inline DualQuat& purify() noexcept {
+    inline DualQuat& purify() noexcept {
         real().purify();
         dual().purify();
         return *this;
     }
     // operator+    
     template<typename Scalar>
-    constexpr inline DualQuat operator+(const DualQuat<Scalar>& other) const noexcept {
+    inline DualQuat operator+(const DualQuat<Scalar>& other) const noexcept {
         return DualQuat( real() + other.real(), dual() + other.dual() );
     }
     // operator-
     template<typename Scalar>
-    constexpr inline DualQuat operator-(const DualQuat<Scalar>& other) const noexcept {
+    inline DualQuat operator-(const DualQuat<Scalar>& other) const noexcept {
         return DualQuat( real() - other.real(), dual() - other.dual() );
     }
     // operator*  
     template<typename Scalar>
-    constexpr inline DualQuat operator*(const DualQuat<Scalar>& other) const noexcept {
+    inline DualQuat operator*(const DualQuat<Scalar>& other) const noexcept {
         const Quat<qScalar>& result_dual = real() * other.dual() + dual() * other.real();
         const Quat<qScalar>& result_real = real() * other.real();
         return DualQuat( result_real, result_dual );
     }
     // operator*  
     template<typename Scalar>
-    constexpr inline DualQuat operator*(const Quat<Scalar>& quat) const noexcept {
+    inline DualQuat operator*(const Quat<Scalar>& quat) const noexcept {
         return DualQuat( real() * quat, dual() * quat );
     }
     // operator*  
-    constexpr inline DualQuat operator*(const qScalar scalar) const noexcept {
+    inline DualQuat operator*(const qScalar scalar) const noexcept {
         return DualQuat( real() * scalar, dual() * scalar );
     }
     // -operator  
-    constexpr inline DualQuat operator-() const noexcept {
+    inline DualQuat operator-() const noexcept {
         return DualQuat( -real(), -dual() );
     }
     // operator== 
-    constexpr inline bool operator==(const DualQuat& other) const noexcept {
+    inline bool operator==(const DualQuat& other) const noexcept {
         return real() == other.real() && dual() == other.dual();
     }
     // operator!= 
-    constexpr inline bool operator!=(const DualQuat& other) const noexcept {
+    inline bool operator!=(const DualQuat& other) const noexcept {
         return real() != other.real() || dual() != other.dual();
     }
     // norm
-    constexpr inline DualQuat norm() const noexcept {
+    inline DualQuat norm() const noexcept {
         const qScalar result_realnorm = real().norm();
         if (result_realnorm == 0) 
             return DualQuat(0);
@@ -607,45 +607,45 @@ public:
         return DualQuat(Quat<qScalar>(result_realnorm), Quat<qScalar>(res_result_dualnorm));
     }
     // copied
-    constexpr inline DualQuat copied() const noexcept {
+    inline DualQuat copied() const noexcept {
         return *this;
     }
     // normalized
-    constexpr inline DualQuat normalized() const {
+    inline DualQuat normalized() const {
         return copied().normalize();
     }
     // purified
-    constexpr inline DualQuat purified() const noexcept {
+    inline DualQuat purified() const noexcept {
         return copied().purify();
     }
     // conj
-    constexpr inline DualQuat conj() const noexcept {
+    inline DualQuat conj() const noexcept {
         return DualQuat(real().conj(), dual().conj());
     }
     // inv
-    constexpr inline DualQuat inv() const noexcept {
+    inline DualQuat inv() const noexcept {
         const Quat<qScalar>& result_real = real().inv();
         const Quat<qScalar>& result_dual = - result_real * dual() * result_real;
         return DualQuat( result_real, result_dual );
     }
     // log
-    constexpr inline DualQuat log() const noexcept {
+    inline DualQuat log() const noexcept {
         const Quat<qScalar>& result_real = real().log();
         const Quat<qScalar>& result_dual = real().inv() * dual();
         return DualQuat( result_real, result_dual );
     }
     // exp
-    constexpr inline DualQuat exp() const noexcept {
+    inline DualQuat exp() const noexcept {
         const Quat<qScalar>& result_real = real().exp();
         const Quat<qScalar>& result_dual = result_real * real().inv() * dual();
         return DualQuat( result_real, result_dual );
     }
     // pow
-    constexpr inline DualQuat pow(const qScalar index) const noexcept {
+    inline DualQuat pow(const qScalar index) const noexcept {
         return (this->log() * index).exp();
     }
     // hamiplus
-    constexpr inline std::array<std::array<qScalar, 8>, 8> hamiplus() const noexcept {
+    inline std::array<std::array<qScalar, 8>, 8> hamiplus() const noexcept {
         const std::array<std::array<qScalar, 4>, 4> result_realhami = real().hamiplus();
         const std::array<std::array<qScalar, 4>, 4> result_dualhami = dual().hamiplus();
         // Initialize a zero container
@@ -661,7 +661,7 @@ public:
         return res;
     }
     // haminus
-    constexpr inline std::array<std::array<qScalar, 8>, 8> haminus() const noexcept {        
+    inline std::array<std::array<qScalar, 8>, 8> haminus() const noexcept {        
         const std::array<std::array<qScalar, 4>, 4> result_realhami = real().haminus();
         const std::array<std::array<qScalar, 4>, 4> result_dualhami = dual().haminus();
         // Initialize a zero container
@@ -678,17 +678,17 @@ public:
         return res;
     }
     // query 
-    constexpr inline Quat<qScalar> real() const noexcept { return _data[0]; }
-    constexpr inline Quat<qScalar> dual() const noexcept { return _data[1]; }
+    inline Quat<qScalar> real() const noexcept { return _data[0]; }
+    inline Quat<qScalar> dual() const noexcept { return _data[1]; }
     // data
-    constexpr inline const qScalar* data() const noexcept { return _data.data()[0].data(); }
-    constexpr inline std::array<qScalar, 8> array() const noexcept { 
+    inline const qScalar* data() const noexcept { return _data.data()[0].data(); }
+    inline std::array<qScalar, 8> array() const noexcept { 
         std::array<qScalar, 8> res;
         std::copy(data(), data()+8, res.begin());
         return res; 
     }
     // to_string
-    constexpr inline std::string to_string() const {
+    inline std::string to_string() const {
         std::ostringstream oss;
         oss << std::fixed << std::setprecision(PRINT_PRECISION) <<  real() << " + " << " ϵ ( " << dual() << " )";
         return oss.str();
@@ -704,68 +704,68 @@ template<typename qScalar, typename>
 class Pose: public DualQuat<qScalar>{
 public:
     // Default Constructor
-    constexpr explicit Pose() noexcept
+    explicit Pose() noexcept
         : DualQuat<qScalar>( 1 ) {
     }
     // Array Constructor
-    constexpr explicit Pose(const std::array<qScalar, 8> arr8) noexcept
+    explicit Pose(const std::array<qScalar, 8> arr8) noexcept
         : DualQuat<qScalar>( arr8 ) {
         this->normalize();
     }
     // Scalar Constructor
-    constexpr explicit Pose(const qScalar w1, const qScalar x1=0, const qScalar y1=0, const qScalar z1=0, 
+    explicit Pose(const qScalar w1, const qScalar x1=0, const qScalar y1=0, const qScalar z1=0, 
                           const qScalar w2=0, const qScalar x2=0, const qScalar y2=0, const qScalar z2=0) noexcept
         : DualQuat<qScalar>( w1, x1, y1, z1, w2, x2, y2, z2 ) {
         this->normalize();
     }
     // Rotation-Translation Constructor 
     template<typename Scalar1, typename Scalar2>
-    constexpr explicit Pose(const Rotation<Scalar1>& rotation, const Translation<Scalar2> translation) noexcept
+    explicit Pose(const Rotation<Scalar1>& rotation, const Translation<Scalar2> translation) noexcept
         : DualQuat<qScalar>(rotation, translation * rotation * 0.5) {
     }
     // Rotation Constructor
     template<typename Scalar>
-    constexpr explicit Pose(const Rotation<Scalar>& rotation) 
+    explicit Pose(const Rotation<Scalar>& rotation) 
         : DualQuat<qScalar>(rotation) {
 
     }
     // Translation Constructor
     template<typename Scalar>
-    constexpr explicit Pose(const Translation<Scalar> translation) 
+    explicit Pose(const Translation<Scalar> translation) 
         : DualQuat<qScalar>(Quat<qScalar>(1), translation * 0.5) {
 
     }
     // DualQuat Constructor
     template <typename Scalar>
-    constexpr Pose(const DualQuat<Scalar>& other) noexcept
+    Pose(const DualQuat<Scalar>& other) noexcept
         : DualQuat<qScalar>( other ) {
         this->normalize();
     }
     // DualQuat Assignment
     template<typename Scalar>
-    constexpr inline Pose& operator=(const DualQuat<Scalar>& other) noexcept {
+    inline Pose& operator=(const DualQuat<Scalar>& other) noexcept {
         this->_real() = other.real();
         this->_dual() = other.dual();
         this->normalize();
         return *this;
     }
-    constexpr Rotation<qScalar> rotation() const noexcept { return Rotation<qScalar>(this->real()); }
-    constexpr Translation<qScalar> translation() const noexcept { return Translation<qScalar>(this->dual() * this->real().conj() * 2); }
+    Rotation<qScalar> rotation() const noexcept { return Rotation<qScalar>(this->real()); }
+    Translation<qScalar> translation() const noexcept { return Translation<qScalar>(this->dual() * this->real().conj() * 2); }
 
     template<typename First_, typename... Args_>
-    constexpr static Pose build_from(const First_& first, const Args_&... args){
+    static Pose build_from(const First_& first, const Args_&... args){
         return Pose(build_from(first) * build_from(args...));
     }  
     template<typename Scalar>
-    constexpr static Rotation<qScalar> build_from(const Rotation<Scalar>& rotation){
+    static Rotation<qScalar> build_from(const Rotation<Scalar>& rotation){
         return rotation;
     }
     template<typename Scalar>
-    constexpr static Pose build_from(const Translation<Scalar>& translation){
+    static Pose build_from(const Translation<Scalar>& translation){
         return Pose(Rotation<qScalar>(), translation);
     }
     template<typename Scalar>
-    constexpr static Pose build_from(const Pose<Scalar>& pose){
+    static Pose build_from(const Pose<Scalar>& pose){
         return pose;
     }
     // Default
@@ -811,8 +811,8 @@ using Unitld = UnitAxis<long double>;
 using DQld = DualQuat<long double>;
 using Poseld = Pose<long double>;
 
-constexpr UnitAxis<std::uint8_t> i_(1,0,0);
-constexpr UnitAxis<std::uint8_t> j_(0,1,0);
-constexpr UnitAxis<std::uint8_t> k_(0,0,1);
+const UnitAxis<std::uint8_t> i_(1,0,0);
+const UnitAxis<std::uint8_t> j_(0,1,0);
+const UnitAxis<std::uint8_t> k_(0,0,1);
 
 }

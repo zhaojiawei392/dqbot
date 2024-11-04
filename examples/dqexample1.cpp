@@ -74,6 +74,7 @@ using scalar_t = float;
     float radius = 0.01;
     float rad_speed = 0.001;
     size_t i = 0;
+    dqbot::Rotf r_test(dqbot::i_, M_2_PI);
 
     while (true)
     {   
