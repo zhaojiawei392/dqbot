@@ -55,9 +55,12 @@ set(CMAKE_LIBRARY_OUTPUT_DIRECTORY "${PROJECT_BINARY_DIR}")
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY "${PROJECT_BINARY_DIR}")
 
 add_subdirectory(libs/qpOASES)
+add_subdirectory(libs/json)
+
 include_directories(
     ${PROJECT_SOURCE_DIR}/include
     ${PROJECT_SOURCE_DIR}/libs/qpOASES/include
+    ${PROJECT_SOURCE_DIR}/libs/json/include
 )
 link_libraries(
     qpOASES
