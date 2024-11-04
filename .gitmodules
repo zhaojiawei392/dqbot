@@ -1,3 +1,6 @@
 [submodule "libs/qpOASES"]
 	path = libs/qpOASES
 	url = https://github.com/coin-or/qpOASES.git
+[submodule "libs/json"]
+	path = libs/json
+	url = https://github.com/nlohmann/json.git
