@@ -23,15 +23,16 @@
  ##
  ##    This project includes [qpOASES](https://github.com/coin-or/qpOASES.git), 
  ##    licensed under the GNU LESSER GENERAL PUBLIC LICENSE Version 2.1, February 1999
+ ##
+ ##    This project includes [nlohmann/json](https://github.com/nlohmann/json), 
+ ##    licensed under the MIT License 
 
 cmake_minimum_required(VERSION 3.25)
-
+project(dqbot VERSION 1.0.0)
 
 # Macro options
 option(dqbot_BUILD_EXAMPLES "Build examples." ON)
 message(STATUS "dqbot_BUILD_EXAMPLES is set to ${dqbot_BUILD_EXAMPLES}")
-# Not build lib examples
-set(QPOASES_BUILD_EXAMPLES OFF CACHE INTERNAL "Not build examples for qpoases.")
 
 # Set the project name and version
 project(dqbot VERSION 1.0 LANGUAGES CXX)
@@ -54,28 +55,60 @@ set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY "${PROJECT_BINARY_DIR}")
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY "${PROJECT_BINARY_DIR}")
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY "${PROJECT_BINARY_DIR}")
 
+# Not build lib examples
+set(QPOASES_BUILD_EXAMPLES OFF CACHE INTERNAL "Not build examples for qpoases.")
 add_subdirectory(libs/qpOASES)
 add_subdirectory(libs/json)
 
-include_directories(
-    ${PROJECT_SOURCE_DIR}/include
-    ${PROJECT_SOURCE_DIR}/libs/qpOASES/include
-    ${PROJECT_SOURCE_DIR}/libs/json/include
+add_library(dqbot INTERFACE)
+target_include_directories(dqbot INTERFACE 
+    $<BUILD_INTERFACE:
+        ${PROJECT_SOURCE_DIR}/include
+        ${PROJECT_SOURCE_DIR}/libs/qpOASES/include
+        ${PROJECT_SOURCE_DIR}/libs/json/include>
+    $<INSTALL_INTERFACE:include> 
 )
-link_libraries(
+target_link_libraries(dqbot INTERFACE
     qpOASES
 )
 
+# Export target configuration
+install(TARGETS dqbot
+        EXPORT dqbotTargets
+        INCLUDES DESTINATION include)
+
+# Install the headers
+install(DIRECTORY ${PROJECT_SOURCE_DIR}/include/ 
+    DESTINATION include 
+    FILES_MATCHING PATTERN "*.hpp")
+
+# Create and install the package configuration files
+include(CMakePackageConfigHelpers)
+write_basic_package_version_file(
+    "${CMAKE_CURRENT_BINARY_DIR}/dqbotConfigVersion.cmake"
+    VERSION ${PROJECT_VERSION}
+    COMPATIBILITY AnyNewerVersion
+)
+
+install(EXPORT dqbotTargets
+        FILE dqbotTargets.cmake
+        DESTINATION lib/cmake/dqbot)
+
+configure_file(dqbotConfig.cmake.in dqbotConfig.cmake @ONLY)
+
+install(FILES
+        "${CMAKE_CURRENT_BINARY_DIR}/dqbotConfig.cmake"
+        "${CMAKE_CURRENT_BINARY_DIR}/dqbotConfigVersion.cmake"
+        DESTINATION lib/cmake/dqbot)
+
+
+# Build examples
 if(dqbot_BUILD_EXAMPLES)
     set(EXAMPLE_NAMES
         dqexample1
     )
     foreach(EXAMPLE ${EXAMPLE_NAMES})
         add_executable(${EXAMPLE} examples/${EXAMPLE}.cpp)
+        target_link_libraries(${EXAMPLE} dqbot)
     endforeach()
 endif()
-
-# Install the headers
-install(DIRECTORY ${PROJECT_SOURCE_DIR}/include/ 
-    DESTINATION include 
-    FILES_MATCHING PATTERN "*.hpp")
