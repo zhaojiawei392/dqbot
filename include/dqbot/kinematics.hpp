@@ -23,11 +23,13 @@
  */
 
 #pragma once
+#include "qpOASES.hpp"
+#include "dqpose.hpp"
+#include "nlohmann/json.hpp"
 #include <memory>
 #include <vector>
 #include <array>
-#include "qpOASES.hpp"
-#include "dqpose.hpp"
+#include <fstream>
 
 namespace dqbot
 {
@@ -206,9 +208,10 @@ protected:
     SerialManipulatorConfig<jScalar> _cfg;
     std::array<std::unique_ptr<Joint<jScalar, void>>, dof> _pjoints;
     SerialManipulatorData<jScalar, dof> _data;
-public:
-    SerialManipulator() = delete;
-    SerialManipulator(const std::array<std::array<jScalar, dof>, 5>& dhparams, const std::array<std::array<jScalar, dof>, 4>& limits, const std::array<jScalar, dof>& joint_positions)
+
+    void _construct(const std::array<std::array<jScalar, dof>, 5>& dhparams, 
+                        const std::array<std::array<jScalar, dof>, 4>& limits, 
+                        const std::array<jScalar, dof>& joint_positions)
     {
         // Initialize joints
         for (int i=0; i<dof; ++i){
@@ -229,12 +232,76 @@ public:
 
         std::cout << "Constructed a " + std::to_string(joint_positions.size()) + "-DoF dqbot::SerialManipulator.\n" ;
     }
-    template<typename Scalar>
-    inline void set_base(const Pose<Scalar>& base) noexcept { _data.base = base; }
-    template<typename Scalar>
-    inline void set_effector(const Pose<Scalar>& effector) noexcept { _data.effector = effector; }
-    template<typename Scalar>
-    inline void set_config(const SerialManipulatorConfig<Scalar>& config) noexcept { _cfg = config; }
+public:
+    SerialManipulator() = delete;
+    ~SerialManipulator() = default;
+    SerialManipulator(const SerialManipulator& other) = default;
+    SerialManipulator(SerialManipulator&& other) = default;
+    SerialManipulator& operator=(const SerialManipulator& other) = default;
+    SerialManipulator& operator=(SerialManipulator&& other) = default;
+
+    explicit SerialManipulator(const std::string& json_path, const std::array<jScalar, dof>& joint_positions)
+    {
+        using json = nlohmann::json;
+        // Open the JSON file
+        std::ifstream file(json_path);
+
+        // Check if the file opened successfully
+        if (!file.is_open()) {
+            throw std::runtime_error("Failed to open the file: " + json_path);
+        }
+
+        // Parse the JSON file
+        json data;
+        try {
+            file >> data;
+        } catch (json::parse_error& e) {
+            throw std::runtime_error("Parse error: " + std::string(e.what()));
+        }
+
+        // Accessing JSON data
+        try {
+            std::array<std::array<jScalar, dof>, 5> dh_params {
+                data["DH_params"]["theta"],
+                data["DH_params"]["d"],
+                data["DH_params"]["a"],
+                data["DH_params"]["alpha"],
+                data["DH_params"]["joint_types"]
+            };
+
+            std::array<std::array<jScalar, dof>, 4> limits {
+                data["joint_limits"]["min_joint_positions"],
+                data["joint_limits"]["max_joint_positions"],
+                data["joint_limits"]["min_joint_velocities"],
+                data["joint_limits"]["max_joint_velocities"]
+            };
+
+            for (int i=0; i<6; ++i) {{
+                dh_params[0][i] = dh_params[0][i] / 180. * M_PI;
+                dh_params[3][i] = dh_params[3][i] / 180. * M_PI;
+                limits[0][i] = limits[0][i] / 180. * M_PI;
+                limits[1][i] = limits[1][i] / 180. * M_PI;
+                limits[2][i] = limits[2][i] / 180. * M_PI;
+                limits[3][i] = limits[3][i] / 180. * M_PI;
+            }}
+
+            SerialManipulatorConfig<jScalar> cfg;
+            cfg.translation_priority = data["solver_config"]["translation_priority"];
+            cfg.error_gain = data["solver_config"]["error_gain"];
+            cfg.joint_damping = data["solver_config"]["joint_damping"];
+            cfg.sampling_time_sec = data["solver_config"]["sampling_time_sec"];
+
+            _construct(dh_params, limits, joint_positions);
+            _cfg = cfg;
+        } catch (json::exception& e) {
+            std::cerr << "Error accessing JSON data: " << e.what() << std::endl;
+        }
+    }
+
+    explicit SerialManipulator(const std::array<std::array<jScalar, dof>, 5>& dhparams, const std::array<std::array<jScalar, dof>, 4>& limits, const std::array<jScalar, dof>& joint_positions)
+    {
+        _construct(dhparams, limits, joint_positions);
+    }
 
     void update(const Pose<jScalar>& desired_pose) {
         USING_NAMESPACE_QPOASES;
@@ -339,14 +406,19 @@ public:
         _update_kinematics();
     }
 
+    template<typename Scalar>
+    inline void set_base(const Pose<Scalar>& base) noexcept { _data.base = base; }
+    template<typename Scalar>
+    inline void set_effector(const Pose<Scalar>& effector) noexcept { _data.effector = effector; }
+    template<typename Scalar>
+    inline void set_config(const SerialManipulatorConfig<Scalar>& config) noexcept { _cfg = config; }
     // query
     inline std::array<jScalar, dof> joint_positions() const noexcept {return _data.joint_positions;}
     inline Pose<jScalar> end_pose() const noexcept {return _data.joint_poses.back();}
     inline std::size_t DoF() const noexcept {return dof;}
+    inline SerialManipulatorConfig<jScalar>& config() noexcept {return _cfg;}
     inline const SerialManipulatorConfig<jScalar>& config() const noexcept {return _cfg;}
     inline const SerialManipulatorData<jScalar, dof>& data() const noexcept {return _data;}
-
-    virtual ~SerialManipulator() = default;
 
 private:
     void _update_kinematics() {
