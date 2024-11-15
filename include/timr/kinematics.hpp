@@ -1,22 +1,22 @@
 /** 
- *     This file is part of dqbot.
+ *     This file is part of timr.
  *  
- *     dqbot is free software: you can redistribute it and/or modify 
+ *     timr is free software: you can redistribute it and/or modify 
  *     it under the terms of the GNU General Public License as published 
  *     by the Free Software Foundation, either version 3 of the License, 
  *     or (at your option) any later version.
  *  
- *     dqbot is distributed in the hope that it will be useful, 
+ *     timr is distributed in the hope that it will be useful, 
  *     but WITHOUT ANY WARRANTY; without even the implied warranty of 
  *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. 
  *     See the GNU General Public License for more details.
  *  
  *     You should have received a copy of the GNU General Public License
- *     along with dqbot. If not, see <https://www.gnu.org/licenses/>.
+ *     along with timr. If not, see <https://www.gnu.org/licenses/>.
  */
 
 /**
- *     \file include/dqbot/kinematics.hpp
+ *     \file include/timr/kinematics.hpp
  *	   \author Jiawei ZHAO
  *	   \version 1.0
  *	   \date 2023-2024
@@ -31,7 +31,7 @@
 #include <array>
 #include <fstream>
 
-namespace dqbot
+namespace timr
 {
 
 template<typename jScalar, typename = std::enable_if_t<std::is_floating_point_v<jScalar>>>
@@ -230,7 +230,7 @@ protected:
         _data.joint_positions = joint_positions;
         _update_kinematics();
 
-        std::cout << "Constructed a " + std::to_string(joint_positions.size()) + "-DoF dqbot::SerialManipulator.\n" ;
+        std::cout << "Constructed a " + std::to_string(joint_positions.size()) + "-DoF timr::SerialManipulator.\n" ;
     }
 public:
     SerialManipulator() = delete;

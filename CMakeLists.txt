@@ -1,18 +1,18 @@
  ## 
- ##    This file is part of dqbot.
+ ##    This file is part of timr.
  ## 
- ##    dqbot is free software: you can redistribute it and/or modify 
+ ##    timr is free software: you can redistribute it and/or modify 
  ##    it under the terms of the GNU General Public License as published 
  ##    by the Free Software Foundation, either version 3 of the License, 
  ##    or (at your option) any later version.
  ## 
- ##    dqbot is distributed in the hope that it will be useful, 
+ ##    timr is distributed in the hope that it will be useful, 
  ##    but WITHOUT ANY WARRANTY; without even the implied warranty of 
  ##    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. 
  ##    See the GNU General Public License for more details.
  ## 
  ##    You should have received a copy of the GNU General Public License
- ##    along with dqbot. If not, see <https://www.gnu.org/licenses/>.
+ ##    along with timr. If not, see <https://www.gnu.org/licenses/>.
  ##
 
  ##
@@ -28,15 +28,15 @@
  ##    licensed under the MIT License 
 
 cmake_minimum_required(VERSION 3.25)
-project(dqbot VERSION 1.0.0 LANGUAGES CXX)
+project(timr VERSION 1.0.0 LANGUAGES CXX)
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED True)
 set(CMAKE_CXX_EXTENSIONS OFF)
 set(CMAKE_DEBUG_POSTFIX d)
 
 # Macro options
-option(dqbot_BUILD_EXAMPLES "Build examples." ON)
-message(STATUS "dqbot_BUILD_EXAMPLES is set to ${dqbot_BUILD_EXAMPLES}")
+option(timr_BUILD_EXAMPLES "Build examples." ON)
+message(STATUS "timr_BUILD_EXAMPLES is set to ${timr_BUILD_EXAMPLES}")
 
 # add compiler warning flags just when building this project via
 # the BUILD_INTERFACE genex
@@ -52,21 +52,21 @@ set(QPOASES_BUILD_EXAMPLES OFF CACHE INTERNAL "Not build examples for qpoases.")
 add_subdirectory(libs/qpOASES)
 add_subdirectory(libs/json)
 
-add_library(dqbot INTERFACE)
-target_include_directories(dqbot INTERFACE 
+add_library(timr INTERFACE)
+target_include_directories(timr INTERFACE 
     $<BUILD_INTERFACE:
         ${PROJECT_SOURCE_DIR}/include
         ${PROJECT_SOURCE_DIR}/libs/qpOASES/include
         ${PROJECT_SOURCE_DIR}/libs/json/include>
     $<INSTALL_INTERFACE:include> 
 )
-target_link_libraries(dqbot INTERFACE
+target_link_libraries(timr INTERFACE
     qpOASES
 )
 
 # Export target configuration
-install(TARGETS dqbot
-        EXPORT dqbotTargets
+install(TARGETS timr
+        EXPORT timrTargets
         INCLUDES DESTINATION include)
 
 # Install the headers
@@ -77,29 +77,29 @@ install(DIRECTORY ${PROJECT_SOURCE_DIR}/include/
 # Create and install the package configuration files
 include(CMakePackageConfigHelpers)
 write_basic_package_version_file(
-    "${CMAKE_CURRENT_BINARY_DIR}/dqbotConfigVersion.cmake"
+    "${CMAKE_CURRENT_BINARY_DIR}/timrConfigVersion.cmake"
     VERSION ${PROJECT_VERSION}
     COMPATIBILITY AnyNewerVersion
 )
 
-install(EXPORT dqbotTargets
-        FILE dqbotTargets.cmake
-        DESTINATION lib/cmake/dqbot)
+install(EXPORT timrTargets
+        FILE timrTargets.cmake
+        DESTINATION lib/cmake/timr)
 
-configure_file(dqbotConfig.cmake.in dqbotConfig.cmake @ONLY)
+configure_file(timrConfig.cmake.in timrConfig.cmake @ONLY)
 install(FILES
-        "${CMAKE_CURRENT_BINARY_DIR}/dqbotConfig.cmake"
-        "${CMAKE_CURRENT_BINARY_DIR}/dqbotConfigVersion.cmake"
-        DESTINATION lib/cmake/dqbot)
+        "${CMAKE_CURRENT_BINARY_DIR}/timrConfig.cmake"
+        "${CMAKE_CURRENT_BINARY_DIR}/timrConfigVersion.cmake"
+        DESTINATION lib/cmake/timr)
 
 
 # Build examples
-if(dqbot_BUILD_EXAMPLES)
+if(timr_BUILD_EXAMPLES)
     set(EXAMPLE_NAMES
-        dqexample1
+        timr_example1
     )
     foreach(EXAMPLE ${EXAMPLE_NAMES})
         add_executable(${EXAMPLE} examples/${EXAMPLE}.cpp)
-        target_link_libraries(${EXAMPLE} dqbot)
+        target_link_libraries(${EXAMPLE} timr)
     endforeach()
 endif()
