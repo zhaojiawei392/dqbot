@@ -19,6 +19,6 @@
 	Version 1.0
 	Date 2024-2025
 
-####    This project includes [qpOASES](https://github.com/coin-or/qpOASES.git), 
-####    licensed under the GNU LESSER GENERAL PUBLIC LICENSE Version 2.1, February 1999
+
+
 
