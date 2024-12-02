@@ -49,6 +49,8 @@ add_compile_options(
 
 # Not build lib examples
 set(QPOASES_BUILD_EXAMPLES OFF CACHE INTERNAL "Not build examples for qpoases.")
+set(JSON_Install ON CACHE INTERNAL "INSTALL JSON.")
+
 add_subdirectory(libs/qpOASES)
 add_subdirectory(libs/json)
 

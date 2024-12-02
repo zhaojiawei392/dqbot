@@ -195,8 +195,9 @@ template<typename jScalar, std::size_t dof>
 struct SerialManipulatorData {
     Pose<jScalar> base;
     Pose<jScalar> effector;
-    std::array<jScalar, dof> joint_positions;
-    std::array<jScalar, dof> joint_velocities;
+    std::array<jScalar, dof> joint_positions{};
+    std::array<jScalar, dof> joint_velocities{};
+    std::array<jScalar, dof> joint_accelerations{};
     std::array<Pose<jScalar>, dof> joint_poses; // {joint1->joint2, joint2->joint3, joint3->joint4, ... , joint?->end}
     std::array<DualQuat<jScalar>, dof> joint_pose_derivatives; // {joint1->joint2, joint2->joint3, joint3->joint4, ... , joint?->end}
     std::array<std::array<jScalar, dof>, 4> joint_limits;
@@ -400,6 +401,7 @@ public:
         qp.getPrimalSolution(xOpt);
         // update joint positions
         for (int i=0; i<dof; ++i) {
+            _data.joint_accelerations[i] = (xOpt[i] - _data.joint_velocities[i]) / _cfg.sampling_time_sec;
             _data.joint_velocities[i] = xOpt[i];
             _data.joint_positions[i] += xOpt[i] * _cfg.sampling_time_sec;
         }
