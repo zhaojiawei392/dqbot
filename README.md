@@ -19,6 +19,5 @@
 	Version 1.0
 	Date 2024-2025
 
-
-
+TIMR stands for This is my robot. this project serves to provide a simple, light-weight, cross-platform kinematics simulation library for robot arm.
 
