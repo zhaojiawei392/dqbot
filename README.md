@@ -19,5 +19,9 @@
 	Version 1.0
 	Date 2024-2025
 
-TIMR stands for This is my robot. this project serves to provide a simple, light-weight, cross-platform kinematics simulation library for robot arm.
+
+## DualQuaternion-based robot control
+
+#### This project is the implementation of dual quaternion based robot control platform. TIMR stands for This is my robot. this project intend to provide a simple, light-weight, cross-platform kinematics simulation library for robot arm. About dual quaternion, please refer to https://en.wikipedia.org/wiki/Dual_quaternion. This project is solely intended for personal practice and experimentation. It does not come with any warranty or guarantee of safety.
+
 
